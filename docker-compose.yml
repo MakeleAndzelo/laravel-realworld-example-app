@@ -20,6 +20,7 @@ services:
       APACHE_DOCUMENT_ROOT: public/
       APP_ENV: dev
       APP_SECRET: aff8cb55b6857d412090187321775342
+      DATABASE_URL: mysql://root:root@mysql:3306/conduit
     volumes:
       - .:/var/www/html:rw
   mysql:
