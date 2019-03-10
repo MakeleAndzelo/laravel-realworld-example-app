@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  traefik:
+    image: traefik:1.7
+    command: --docker --docker.exposedbydefault=false
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  app:
+    image: thecodingmachine/php:7.2-v1-apache
+    labels:
+      - traefik.enable=true
+      - traefik.backend=app
+      - traefik.frontend.rule=Host:app.localhost
+    environment:
+      PHP_MEMORY_LIMIT: 1G
+      PHP_EXTENSION_XDEBUG: 1
+      APACHE_DOCUMENT_ROOT: public/
+      APP_ENV: dev
+      APP_SECRET: aff8cb55b6857d412090187321775342
+    volumes:
+      - .:/var/www/html:rw
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: conduit
+    ports:
+      - 3306:3306
+
+volumes:
+  mysql_data:
+    driver: local

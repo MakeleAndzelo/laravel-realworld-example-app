@@ -1,17 +1,26 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
-# dependencies
+###> dependencies ###
 /node_modules
 /bower_components
+###< dependencies ###
 
-# IDEs and editors
+###> IDEs and editors ###
 /.idea
 .project
 .classpath
 *.launch
 .settings/
+###< IDEs and editors ###
 
-
-#System Files
+###> System Files ###
 .DS_Store
 Thumbs.db
+###< System Files ###
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
