@@ -21,6 +21,9 @@ services:
       APP_ENV: dev
       APP_SECRET: aff8cb55b6857d412090187321775342
       DATABASE_URL: mysql://root:root@mysql:3306/conduit
+      JWT_PASSPHRASE: secret
+      JWT_SECRET_KEY: "%kernel.project_dir%/config/jwt/private.pem"
+      JWT_PUBLIC_KEY: "%kernel.project_dir%/config/jwt/public.pem"
     volumes:
       - .:/var/www/html:rw
   mysql:
