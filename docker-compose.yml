@@ -24,6 +24,7 @@ services:
       JWT_PASSPHRASE: secret
       JWT_SECRET_KEY: "%kernel.project_dir%/config/jwt/private.pem"
       JWT_PUBLIC_KEY: "%kernel.project_dir%/config/jwt/public.pem"
+      CORS_ALLOW_ORIGIN: "*"
     volumes:
       - .:/var/www/html:rw
   mysql:
