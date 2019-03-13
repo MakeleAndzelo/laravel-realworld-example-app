@@ -1,0 +1,4 @@
+App\Entity\User:
+  itemOperations: []
+  collectionOperations:
+    post: ~

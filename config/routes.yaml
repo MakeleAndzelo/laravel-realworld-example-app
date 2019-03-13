@@ -2,5 +2,6 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
-api_login_check:
+app_login:
   path: /api/users/login
+  controller: App\Controller\LoginController::loginAction
