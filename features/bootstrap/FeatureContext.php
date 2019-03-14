@@ -1,48 +1,60 @@
 <?php
 
-use Behat\Behat\Context\Context;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
-
-/**
- * This context class contains the definitions of the steps used by the demo 
- * feature file. Learn how to get started with Behat and BDD on Behat's website.
- * 
- * @see http://behat.org/en/latest/quick_start.html
- */
-class FeatureContext implements Context
+class FeatureContext extends Behatch\Context\RestContext
 {
     /**
-     * @var KernelInterface
+     * @var \App\DataFixtures\UserFixtures
      */
-    private $kernel;
+    private $fixtures;
 
     /**
-     * @var Response|null
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
-    private $response;
+    private $entityManager;
 
-    public function __construct(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
+    /**
+     * @var \Coduo\PHPMatcher\Matcher
+     */
+    private $matcher;
+
+    public function __construct(
+        \Behatch\HttpCall\Request $request,
+        \App\DataFixtures\UserFixtures $fixtures,
+        \Doctrine\ORM\EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($request);
+        $this->fixtures = $fixtures;
+        $this->matcher = (new \Coduo\PHPMatcher\Factory\SimpleFactory())->createMatcher();
+        $this->entityManager = $entityManager;
+        $this->request = $request;
     }
 
     /**
-     * @When a demo scenario sends a request to :path
+     * @BeforeScenario @createSchema
      */
-    public function aDemoScenarioSendsARequestTo(string $path)
+    public function createSchema()
     {
-        $this->response = $this->kernel->handle(Request::create($path, 'GET'));
+        $classes = $this->entityManager->getMetadataFactory()->getAllMetadata();
+
+        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
+
+        $schemaTool->dropSchema($classes);
+        $schemaTool->createSchema($classes);
+
+        $purger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger($this->entityManager);
+        $fixturesExecutor = new \Doctrine\Common\DataFixtures\Executor\ORMExecutor($this->entityManager, $purger);
+
+        $fixturesExecutor->execute([$this->fixtures]);
     }
 
     /**
-     * @Then the response should be received
+     * @Given /^the JSON matches expected template:$/
      */
-    public function theResponseShouldBeReceived()
+    public function theJSONMatchesExpectedTemplate(\Behat\Gherkin\Node\PyStringNode $string)
     {
-        if ($this->response === null) {
-            throw new \RuntimeException('No response received');
-        }
+        $actual = $this->request->getContent();
+        $this->assertTrue(
+            $this->matcher->match($actual, $string->getRaw())
+        );
     }
 }

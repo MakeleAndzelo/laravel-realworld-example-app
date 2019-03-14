@@ -53,6 +53,12 @@
     "behatch/contexts": {
         "version": "3.2.0"
     },
+    "coduo/php-matcher": {
+        "version": "3.1.2"
+    },
+    "coduo/php-to-string": {
+        "version": "2.0.1"
+    },
     "container-interop/container-interop": {
         "version": "1.2.0"
     },
@@ -194,6 +200,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.2"
+    },
+    "openlss/lib-array2xml": {
+        "version": "0.0.10"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
